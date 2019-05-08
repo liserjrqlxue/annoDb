@@ -32,7 +32,7 @@ var (
 	isDE          = regexp.MustCompile(`^#-GF\s+DE\s+(.+)`)
 	isGS          = regexp.MustCompile(`^#=GS`)
 	isHomoSapiens = regexp.MustCompile(`\[Homo sapiens\]`)
-	isProtainPos  = regexp.MustCompile(`^#=GS\s+(\S+)\/(\d+)-(\d+)\s+DE`)
+	isProtainPos  = regexp.MustCompile(`^#=GS\s+(\S+)/(\d+)-(\d+)\s+DE`)
 )
 
 func main() {
@@ -81,6 +81,9 @@ func main() {
 			} else {
 				log.Fatalf("can not parser:[%s]\tmatchs:[%v]\n", line, matchs)
 			}
+		default:
+
 		}
 	}
+	log.Println(scanner.Err())
 }
