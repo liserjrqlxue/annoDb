@@ -30,7 +30,7 @@ var (
 // regexp
 var (
 	isAC          = regexp.MustCompile(`^#=GF\s+AC\s+(\S+)`)
-	isDE          = regexp.MustCompile(`^#-GF\s+DE\s+(.+)`)
+	isDE          = regexp.MustCompile(`^#=GF\s+DE\s+(.+)`)
 	isGS          = regexp.MustCompile(`^#=GS`)
 	isHomoSapiens = regexp.MustCompile(`\[Homo sapiens\]`)
 	isProtainPos  = regexp.MustCompile(`^#=GS\s+(\S+)/(\d+)-(\d+)\s+DE`)
@@ -91,9 +91,9 @@ func main() {
 		}
 		if err != nil {
 			break
+			if err != io.EOF {
+				log.Fatalln(err)
+			}
 		}
-	}
-	if err != io.EOF {
-		log.Fatalln(err)
 	}
 }
