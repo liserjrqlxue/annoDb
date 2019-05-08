@@ -21,8 +21,8 @@ var (
 	)
 	output = flag.String(
 		"output",
-		*input+".HomoSapiens.txt",
-		"out put Pfam domain db",
+		"",
+		"out put Pfam domain db, default is -input.HomoSapiens.txt",
 	)
 )
 
@@ -40,6 +40,9 @@ func main() {
 	if *input == "" {
 		flag.Usage()
 		os.Exit(1)
+	}
+	if *output == "" {
+		*output = *input + ".HomoSapiens.txt"
 	}
 	file, err := os.Open(*input)
 	simple_util.CheckErr(err)
