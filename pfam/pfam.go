@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/liserjrqlxue/simple-util"
+	"io"
 	"log"
 	"os"
 	"regexp"
@@ -35,6 +36,8 @@ var (
 	isProtainPos  = regexp.MustCompile(`^#=GS\s+(\S+)/(\d+)-(\d+)\s+DE`)
 )
 
+var err error
+
 func main() {
 	flag.Parse()
 	if *input == "" {
@@ -55,14 +58,14 @@ func main() {
 	out, err := os.Create(*output)
 	simple_util.CheckErr(err)
 	defer simple_util.DeferClose(out)
+
 	fmt.Fprintln(out, strings.Join([]string{"#Protain", "Start", "End", "Accession", "Definition"}, "\t"))
-
-	scanner := bufio.NewScanner(gr)
-
 	var protain, start, end, accession, definition string
 
-	for scanner.Scan() {
-		line := scanner.Text()
+	reader := bufio.NewReader(gr)
+	for {
+		line, err := reader.ReadString('\n')
+		line = strings.TrimSuffix(line, "\n")
 		switch {
 		case isAC.MatchString(line):
 			matchs := isAC.FindStringSubmatch(line)
@@ -85,8 +88,12 @@ func main() {
 				log.Fatalf("can not parser:[%s]\tmatchs:[%v]\n", line, matchs)
 			}
 		default:
-
+		}
+		if err != nil {
+			break
 		}
 	}
-	log.Println(scanner.Err())
+	if err != io.EOF {
+		log.Fatalln(err)
+	}
 }
